@@ -1,13 +1,15 @@
 #include<iostream>
 using namespace std;
 
-const int MAX_BOOK = 100;
+const int MAX_BOOK = 1000;
 
 struct book{
     int id[MAX_BOOK];
     string name[MAX_BOOK];
     int quantity[MAX_BOOK];
+    int borrowd_count[MAX_BOOK];
     int added = 0;
+
     void addbook(){
         cout<<"Enter a Book ID: "<<"\n";
         cin>>id[added];
@@ -15,6 +17,8 @@ struct book{
         cin>>name[added];
         cout<<"Enter a Book Quantity: "<<"\n";
         cin>>quantity[added];
+        cout<<"Enter How many times this books borrowed: "<<"\n";
+        cin>>borrowd_count[added];
         added++;
     }
 
@@ -62,34 +66,32 @@ struct book{
             {
                 if (id[j] == i)
                 {
-                    cout<<id[j]<<" ";
-                    cout<<name[j]<<" ";
-                    cout<<quantity[j]<<" ";
-                    cout<<"**********************"<<"\n";
+                    cout<<" ID = "<<id[j]<<" ";
+                    cout<<" Name = "<<name[j]<<" ";
+                    cout<<" Total Quantity = "<<quantity[j]<<"\n"; 
                 }
             }
         }
         
-        
+        cout<<"******************"<<"\n";
    }
 
    void print_book_by_name()
    {
-        for (int i = 0; i < added; i++)
+        for (int i = (int)'A'; i <= (int)'z'; i++)
         {
-            for (int j = (int)'A'; j <= (int)'z'; j++)
+            for (int j = 0; j < added; j++)
             {
-                if ((int)name[i][0] == j)
+                if ((int)name[j][0] == i)
                 {
-                    cout<<id[i]<<" ";
-                    cout<<name[i]<<" ";
-                    cout<<quantity[i]<<" ";
-                    cout<<"**********************"<<"\n";
+                    cout<<" ID = "<<id[j]<<" ";
+                    cout<<" Name = "<<name[j]<<" ";
+                    cout<<" Total Quantity = "<<quantity[j]<<"\n";
                 }
                 
             }
-            
         }
+        cout<<"******************"<<"\n";
    }
 
 
