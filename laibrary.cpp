@@ -19,8 +19,7 @@ struct book{
         cin>>name[added];
         cout<<"Enter a Book Quantity: "<<"\n";
         cin>>quantity[added];
-        cout<<"Enter How many times this books borrowed: "<<"\n";
-        cin>>borrowd_count[added];
+        borrowd_count[added] = 0;
         added++;
     }
 
@@ -28,9 +27,10 @@ struct book{
         string query;
         cout<<"Enter a Query : "<<"\n";
         cin>>query;
+        bool is_found = true;
         for (int i = 0; i < added; i++)
         {
-            bool is_found = true;
+            
             for (int j = 0; j < query.size(); j++)
             {
                 if (query[j] != name[i][j])
@@ -70,7 +70,8 @@ struct book{
                 {
                     cout<<" ID = "<<id[j]<<" ";
                     cout<<" Name = "<<name[j]<<" ";
-                    cout<<" Total Quantity = "<<quantity[j]<<"\n"; 
+                    cout<<" Total Quantity = "<<quantity[j]<<" "; 
+                    cout<<" this book has been borrowed "<<borrowd_count[j]<<" times \n"; 
                 }
             }
         }
@@ -89,6 +90,7 @@ struct book{
                     cout<<" ID = "<<id[j]<<" ";
                     cout<<" Name = "<<name[j]<<" ";
                     cout<<" Total Quantity = "<<quantity[j]<<"\n";
+                    cout<<" this book has been borrowed "<<borrowd_count[j]<<" times \n";
                 }
                 
             }
@@ -96,19 +98,46 @@ struct book{
         cout<<"******************"<<"\n";
    }
 
+    void search_book_nd_decrease_quantity(string bookname){
+        for (int i = 0; i < added; i++)
+        {
+            if(name[i] == bookname){
+                if (quantity[i] > 0)
+                {
+                    quantity[i]--;
+                    borrowd_count[i]++;
+                }else{
+                    cout<<"sorry this book is finished theresfore it is not available for borrowing";
+                }
+                
+            }
+        }
+        
+    }
 
+    // void check_quantity(string bookname){
+    //     for (int i = 0; i < added; i++)
+    //     {
+    //         if (name[i] == bookname)
+    //         {
+    //             /* code */
+    //         }
+            
+    //     }
+        
+    // }
 };
 
 struct book_user {
     int id[MAX_USER_BOOK];
-    string user[MAX_USER_BOOK];
-    int bookid[MAX_USER_BOOK];
+    string users[MAX_USER_BOOK];
+    string bookname[MAX_USER_BOOK];
     int added = 0;
 
-    void user_borrow_book(int _id,string _user , int _bookid){
+    void logging(int _id , string _user , string _bookname){
         id[added] = _id;
-        user[added] = _user;
-        bookid[added] = _bookid;
+        users[added] = _user;
+        bookname[added] = _bookname;
         added++;
     }
     
@@ -120,18 +149,58 @@ struct book_user {
     //         cout<<bookid[i]<<"\n";
     //     }
     // }
+
+    void print_who_borrowd_book_by_name(){
+        string book;
+        cout<<" Enter book name: ";
+        cin>>book;
+        int count = 0;
+        for (int i = 0; i < added; i++)
+        {
+            if (bookname[i] == book)
+            {
+                cout<<users[i]<<"\n";
+                count++;
+            }
+        }
+        
+        if (count == 0)
+        {
+            cout<<" sorry no one borrowd this book ";
+        }
+        
+    }
 };
 
 struct user {
     int id[MAX_USER];
-    string name[MAX_USER];
+    string names[MAX_USER];
     int added = 0;
 
     void add_user(){
-        cout<<"Enter a Book ID: "<<"\n";
+        cout<<"Enter a User ID: "<<"\n";
         cin>>id[added];
-        cout<<"Enter a Book Name: "<<"\n";
-        cin>>name[added];
+        cout<<"Enter a User Name: "<<"\n";
+        cin>>names[added];
+    }
+
+    // void user_borrow_book(){
+    //     cout<<"Enter user name and book name: ";
+    //     string name,bookname;
+    // }
+
+    
+    int search(string user){
+        int count = 0;
+        for (int i = 0; i < added; i++)
+        {
+            if(names[i] == user){
+                count++;
+                return id[i];
+            }
+        }
+        if(count == 0)
+            cout<<"there is no such user"<<"\n";
     }
 
 };
@@ -149,16 +218,16 @@ struct library_system{
 				book.add_book();
 			else if (choice == 2)
 				book.search_for_books_by_prefix();
-			// else if (choice == 3)
-			// 	book.print_who_borrowd_book_by_name();
+			else if (choice == 3)
+				log.print_who_borrowd_book_by_name();
 			else if (choice == 4)
                 book.print_book_by_id();
             else if (choice == 5)
                 book.print_book_by_name();
-            // else if (choice == 6)
-            //     user.add_user();
-            // else if (choice == 7)
-            //     log.user_borrow_book();
+            else if (choice == 6)
+                user.add_user();
+            else if (choice == 7)
+                user_borrow_book();
             // else if (choice == 8)
             //     log.user_return_book();
             // else if (choice == 9)
@@ -179,7 +248,7 @@ struct library_system{
 			cout << "5)  print_book_by_name\n";
 			cout << "6)  add_user\n";
 			cout << "7)  user_borrow_book\n";
-			cout << "8)  user_retur_book\n";
+			cout << "8)  user_return_book\n";
 			cout << "9)  print_users\n";
 			cout << "10) Exit\n";
 
@@ -192,6 +261,17 @@ struct library_system{
 		}
 		return choice;
 	}
+
+    void user_borrow_book()
+    {
+        cout<<"Enter user name and book name :";
+        string name,bookname;
+        cin>>name>>bookname;
+        int result;
+        result = user.search(name);
+        book.search_book_nd_decrease_quantity(bookname);
+        log.logging(result,name,bookname);
+    }
 };
 
 int main() {
