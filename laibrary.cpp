@@ -107,37 +107,55 @@ struct book{
                     quantity[i]--;
                     borrowd_count[i]++;
                 }else{
-                    cout<<"sorry this book is finished theresfore it is not available for borrowing";
+                    cout<<" sorry this book is finished theresfore it is not available for borrowing ";
                 }
                 
             }
         }
-        
+
     }
 
-    // void check_quantity(string bookname){
-    //     for (int i = 0; i < added; i++)
-    //     {
-    //         if (name[i] == bookname)
-    //         {
-    //             /* code */
-    //         }
-            
-    //     }
-        
-    // }
+     int search(string namee){
+        int count = 0;
+
+        for (int i = 0; i < added; i++)
+        {
+            if(name[i] == namee){
+                count++;
+                return id[i];
+            }
+        }
+
+        if(count == 0)
+            cout<<"there is no such book id"<<"\n";  
+
+        return -1;
+    }
+
+     void search_book_nd_increase_quantity(string bookname){
+        for (int i = 0; i < added; i++)
+        {
+            if(name[i] == bookname){
+                quantity[i]++;
+            }
+        }
+     }
+    
+
 };
 
 struct book_user {
-    int id[MAX_USER_BOOK];
+    int userid[MAX_USER_BOOK];
+    int bookid[MAX_USER_BOOK];
     string users[MAX_USER_BOOK];
     string bookname[MAX_USER_BOOK];
     int added = 0;
 
-    void logging(int _id , string _user , string _bookname){
-        id[added] = _id;
+    void logging(int _userid , string _user , string _bookname ,int _bookid){
+        userid[added] = _userid;
         users[added] = _user;
         bookname[added] = _bookname;
+        bookid[added] = _bookid;
         added++;
     }
     
@@ -157,7 +175,7 @@ struct book_user {
         int count = 0;
         for (int i = 0; i < added; i++)
         {
-            if (bookname[i] == book)
+            if (bookname[i] == book && users[i] != "*")
             {
                 cout<<users[i]<<"\n";
                 count++;
@@ -167,6 +185,35 @@ struct book_user {
         if (count == 0)
         {
             cout<<" sorry no one borrowd this book ";
+        }
+        
+    }
+
+    void clear_user_and_book_from_log(string user , string book){
+        for (int i = 0; i < added; i++)
+        {
+            if (users[i] == user && bookname[i] == book)
+            {
+                users[i] = "*";
+            }
+            
+        }
+        
+    }
+
+    void print_users(){
+        for (int i = 0; i < added; i++)
+        {
+            cout<<"user " << users[i] << " id " << userid[i] << " borrowed books ids: ";
+            for (int j = 0; j < added; j++)
+            {
+                if (users[i] == users[j] && users[i] != "*")
+                {
+                    cout<<bookid[j]<<" ";
+                }
+                
+            }
+            cout<<"\n";
         }
         
     }
@@ -190,18 +237,23 @@ struct user {
     // }
 
     
-    int search(string user){
+     int search(string namee){
         int count = 0;
+
         for (int i = 0; i < added; i++)
         {
-            if(names[i] == user){
+            if(names[i] == namee){
                 count++;
                 return id[i];
             }
         }
+
         if(count == 0)
-            cout<<"there is no such user"<<"\n";
+            cout<<"there is no such user id"<<"\n";  
+
+        return -1;
     }
+   
 
 };
 
@@ -228,10 +280,10 @@ struct library_system{
                 user.add_user();
             else if (choice == 7)
                 user_borrow_book();
-            // else if (choice == 8)
-            //     log.user_return_book();
-            // else if (choice == 9)
-            //     user.print_users();
+            else if (choice == 8)
+                user_return_book();
+            else if (choice == 9)
+                log.print_users();
             else if(choice == 10)
 				break;
 		}
@@ -267,11 +319,22 @@ struct library_system{
         cout<<"Enter user name and book name :";
         string name,bookname;
         cin>>name>>bookname;
-        int result;
-        result = user.search(name);
+        int bookID , userID;
+        userID = user.search(name);
+        bookID = book.search(bookname);
         book.search_book_nd_decrease_quantity(bookname);
-        log.logging(result,name,bookname);
+        log.logging(userID,name,bookname,bookID);
     }
+
+    void user_return_book(){
+        cout<<"Enter user name and book name :";
+        string name,bookname;
+        cin>>name>>bookname;
+        book.search_book_nd_increase_quantity(bookname);
+        log.clear_user_and_book_from_log(name,bookname);
+    }
+
+
 };
 
 int main() {
