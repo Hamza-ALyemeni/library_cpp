@@ -116,20 +116,19 @@ struct book{
     }
 
      int search(string namee){
-        int count = 0;
+        bool found = false;
 
         for (int i = 0; i < added; i++)
         {
             if(name[i] == namee){
-                count++;
+                found = true;
                 return id[i];
             }
         }
 
-        if(count == 0)
+        if(!found)
             cout<<"there is no such book id"<<"\n";  
 
-        return -1;
     }
 
      void search_book_nd_increase_quantity(string bookname){
@@ -201,22 +200,22 @@ struct book_user {
         
     }
 
-    void print_users(){
-        for (int i = 0; i < added; i++)
-        {
-            cout<<"user " << users[i] << " id " << userid[i] << " borrowed books ids: ";
-            for (int j = 0; j < added; j++)
-            {
-                if (users[i] == users[j] && users[i] != "*")
-                {
-                    cout<<bookid[j]<<" ";
-                }
+    // void print_users(){
+    //     for (int i = 0; i < added; i++)
+    //     {
+    //         cout<<"user " << users[i] << " id " << userid[i] << " borrowed books ids: ";
+    //         for (int j = 0; j < added; j++)
+    //         {
+    //             if (users[i] == users[j] && users[i] != "*")
+    //             {
+    //                 cout<<bookid[j]<<" ";
+    //             }
                 
-            }
-            cout<<"\n";
-        }
+    //         }
+    //         cout<<"\n";
+    //     }
         
-    }
+    // }
 };
 
 struct user {
@@ -229,6 +228,7 @@ struct user {
         cin>>id[added];
         cout<<"Enter a User Name: "<<"\n";
         cin>>names[added];
+        added++;
     }
 
     // void user_borrow_book(){
@@ -238,20 +238,19 @@ struct user {
 
     
      int search(string namee){
-        int count = 0;
+        bool is_found = false;
 
         for (int i = 0; i < added; i++)
         {
             if(names[i] == namee){
-                count++;
+                is_found = true;
                 return id[i];
             }
         }
 
-        if(count == 0)
+        if(!is_found)
             cout<<"there is no such user id"<<"\n";  
 
-        return -1;
     }
    
 
@@ -283,7 +282,7 @@ struct library_system{
             else if (choice == 8)
                 user_return_book();
             else if (choice == 9)
-                log.print_users();
+                print_users();
             else if(choice == 10)
 				break;
 		}
@@ -334,6 +333,22 @@ struct library_system{
         log.clear_user_and_book_from_log(name,bookname);
     }
 
+     void print_users(){
+        for (int i = 0; i < user.added; i++)
+        {
+            cout<<"user " << user.names[i] << " id " << user.id[i] << " borrowed books ids: ";
+            for (int j = 0; j < log.added; j++)
+            {
+                if (user.names[i] == log.users[j] && log.users[j] != "*")
+                {
+                    cout<<log.bookid[j]<<" ";
+                }
+                
+            }
+            cout<<"\n";
+        }
+        
+    }
 
 };
 
